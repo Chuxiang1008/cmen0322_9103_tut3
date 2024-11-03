@@ -1,18 +1,22 @@
 let Blocks = [];
 let cars = []; // Array for storing cars
 let smallBlockSize;
+let urbanizationStage = 0; // Used to record stages of urbanization
 
 function setup() {
   createCanvas(windowWidth, windowHeight); // Drawing canvas as window size
   initializeBlocks(); // Draw different coloured blocks as buildings, roads, pavements, zebra crossings.
   generateRandomSmallBlocks(); // Generate small red or blue blocks to simulate cars
-  drawBlocks();
 }
 
 function draw() {
   background(240, 240, 235);
   drawBlocks(); // generate all blocks
   moveCars(); // move cars blocks
+  //  Control urbanization, add new urban elements every 120 frames
+  if (frameCount % 120 === 0) {
+  addNewCityElement();
+  }
 }
 
 // Allow output images to automatically adjust to changes in window size
@@ -22,7 +26,6 @@ function windowResized() {
   cars = []; // clear cars array
   initializeBlocks();
   generateRandomSmallBlocks();
-  drawBlocks();
 }
 
 function initializeBlocks() {
@@ -90,23 +93,30 @@ function initializeBlocks() {
   Blocks.push(new Block(15 * smallBlockSize, 22 * smallBlockSize, 2 * smallBlockSize, 2 * smallBlockSize, color(230, 205, 40)));
 }
 
-
-// Create a class with each block (buildings, roads) as a separate object for management and drawing
-class Block {
-  constructor(x, y, w, h, c, isRoad = false) {
-    this.x = x;                
-    this.y = y;                
-    this.w = w; 
-    this.h = h;
-    this.c = c;
-    this.isRoad = isRoad; // Checks if blocks are road blocks, defaults to false
+// Add new city elements
+function addNewCityElement() {
+  if (urbanizationStage === 0) {
+    Blocks.push(new Block(6 * smallBlockSize, 2 * smallBlockSize, smallBlockSize, 46 * smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(28 * smallBlockSize, 0, smallBlockSize, 48 * smallBlockSize, color(230, 205, 40), true));
+  } else if (urbanizationStage === 1) {
+    Blocks.push(new Block(3 * smallBlockSize, 12 * smallBlockSize, 23 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(0, 17 * smallBlockSize, 48 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(34 * smallBlockSize, 19 * smallBlockSize, 4 * smallBlockSize, smallBlockSize, color(160, 55, 45)));
+    Blocks.push(new Block(34 * smallBlockSize, 18 * smallBlockSize, 4 * smallBlockSize, 1.3 * smallBlockSize, color(200, 200, 200)));
+  } else if (urbanizationStage === 2) {
+    Blocks.push(new Block(0, 20 * smallBlockSize, 48 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(0, 26 * smallBlockSize, 48 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(0, 30 * smallBlockSize, 48 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(40 * smallBlockSize, 0, smallBlockSize, 48 * smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(7 * smallBlockSize, 21 * smallBlockSize, 4 * smallBlockSize, 3 * smallBlockSize, color(160, 55, 45)));
+    Blocks.push(new Block(41 * smallBlockSize, 13 * smallBlockSize, 3 * smallBlockSize, 2.5 * smallBlockSize, color(70, 100, 190)));
+    Blocks.push(new Block(34 * smallBlockSize, 21 * smallBlockSize, 4 * smallBlockSize, 5 * smallBlockSize, color(160, 55, 45)));
+    Blocks.push(new Block(35 * smallBlockSize, 20 * smallBlockSize, 2.5 * smallBlockSize, smallBlockSize, color(200, 200, 200)));
+    Blocks.push(new Block(35 * smallBlockSize, 23 * smallBlockSize, 2.3 * smallBlockSize, 2 * smallBlockSize, color(200, 200, 200)));
+    Blocks.push(new Block(41 * smallBlockSize, 22 * smallBlockSize, 5 * smallBlockSize, 3 * smallBlockSize, color(230, 205, 40)));
   }
-  
-  display() {
-    noStroke(); 
-    fill(this.c);
-    rect(this.x, this.y, this.w, this.h);
-  }
+  urbanizationStage++;
+  generateRandomSmallBlocks(); // Generate cars for newly added roads
 }
 
 function drawBlocks() {
@@ -115,7 +125,6 @@ function drawBlocks() {
   }
 }
 
-
 // Generate random blocks on road blocks to simulate cars
 function generateRandomSmallBlocks() {
 
@@ -123,7 +132,7 @@ function generateRandomSmallBlocks() {
   for (let block of Blocks) {
     if (block.isRoad) {
       // Generate small blocks randomly in the road area
-      let numSmallBlocks = 3; // Each road generates 3 blocks
+      let numSmallBlocks = 2; // Change the number of cars generated per road from 3 to 2
       for (let t = 0; t < numSmallBlocks; t++) {
         // Use Math.floor() to ensure that randomly generated numbers are integers
         // Make the position of the randomly generated small blocks on the road blocks
@@ -146,6 +155,24 @@ function generateRandomSmallBlocks() {
          cars.push(new Car(x, y, smallBlockSize, colorSmallBlock, block, direction)); 
       }
     }
+  }
+}
+
+// Create a class with each block (buildings, roads) as a separate object for management and drawing
+class Block {
+  constructor(x, y, w, h, c, isRoad = false) {
+    this.x = x;                
+    this.y = y;                
+    this.w = w; 
+    this.h = h;
+    this.c = c;
+    this.isRoad = isRoad; // Checks if blocks are road blocks, defaults to false
+  }
+  
+  display() {
+    noStroke(); 
+    fill(this.c);
+    rect(this.x, this.y, this.w, this.h);
   }
 }
 
