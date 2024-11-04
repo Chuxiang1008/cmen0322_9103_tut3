@@ -2,29 +2,40 @@ let Blocks = [];
 let cars = []; // Array for storing cars
 let smallBlockSize;
 let urbanizationStage = 0; // Used to record stages of urbanization
+let maxurbanizationStage = 4;  // Set the maximum city stage to avoid infinite accumulation of blocks.
 
 function setup() {
   createCanvas(windowWidth, windowHeight); // Drawing canvas as window size
   initializeBlocks(); // Draw different coloured blocks as buildings, roads, pavements, zebra crossings.
   generateRandomSmallBlocks(); // Generate small red or blue blocks to simulate cars
+  
+  // Use setInterval(() => {...}, interval); to set a timer that periodically executes addNewCityElement()
+  // Place setInterval in setup() to avoid repeatedly generating timers because it is placed in draw()
+  setInterval(() => {
+  if (urbanizationStage < maxurbanizationStage) {
+    addNewCityElement();
+  }
+}, 2500); // Every 2.5 seconds, new urban elements are added.
 }
 
 function draw() {
   background(240, 240, 235);
   drawBlocks(); // generate all blocks
   moveCars(); // move cars blocks
-  //  Control urbanization, add new urban elements every 120 frames
-  if (frameCount % 120 === 0) {
-  addNewCityElement();
-  }
 }
 
 // Allow output images to automatically adjust to changes in window size
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   Blocks = []; // Clear the original Blocks array at each window adjustment 
-  cars = []; // clear cars array
   initializeBlocks();
+  // When adjusting the window, set urbanizationStage to zero
+  // regenerate all stages of urban elements
+  urbanizationStage = 0;
+  for (let i = 0; i < urbanizationStage; i++) {
+   addNewCityElement();
+ }
+  cars = []; // clear cars array to avoid accumulation
   generateRandomSmallBlocks();
 }
 
@@ -41,7 +52,6 @@ function initializeBlocks() {
   
   // Yellow blocks simulate buildings
   Blocks.push(new Block(7 * smallBlockSize, 7 * smallBlockSize, 4 * smallBlockSize, 4 * smallBlockSize, color(230, 205, 40)));
-  
   Blocks.push(new Block(7 * smallBlockSize, 31.8 * smallBlockSize, 5 * smallBlockSize, 3 * smallBlockSize, color(230, 205, 40)));
   Blocks.push(new Block(20 * smallBlockSize, 21 * smallBlockSize, 3 * smallBlockSize, 5 * smallBlockSize, color(230, 205, 40)));
   Blocks.push(new Block(20 * smallBlockSize, 27 * smallBlockSize, 3 * smallBlockSize, 3 * smallBlockSize, color(230, 205, 40)));
@@ -73,7 +83,7 @@ function initializeBlocks() {
   Blocks.push(new Block(8 * smallBlockSize, 42 * smallBlockSize, 2 * smallBlockSize, 2 * smallBlockSize, color(200, 200, 200)));
   Blocks.push(new Block(13 * smallBlockSize, 43 * smallBlockSize, 2 * smallBlockSize, 2 * smallBlockSize, color(200, 200, 200)));
   Blocks.push(new Block(20 * smallBlockSize, 23 * smallBlockSize, 3 * smallBlockSize, 2 * smallBlockSize, color(200, 200, 200)));
-  Blocks.push(new Block(20 * smallBlockSize, 26 * smallBlockSize, 3 * smallBlockSize, 1.3 * smallBlockSize, color(200, 200, 200)));
+  Blocks.push(new Block(20 * smallBlockSize, 26 * smallBlockSize, 3 * smallBlockSize, 1.8 * smallBlockSize, color(200, 200, 200)));
 
  
 
@@ -109,11 +119,21 @@ function addNewCityElement() {
     Blocks.push(new Block(0, 30 * smallBlockSize, 48 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
     Blocks.push(new Block(40 * smallBlockSize, 0, smallBlockSize, 48 * smallBlockSize, color(230, 205, 40), true));
     Blocks.push(new Block(7 * smallBlockSize, 21 * smallBlockSize, 4 * smallBlockSize, 3 * smallBlockSize, color(160, 55, 45)));
-    Blocks.push(new Block(41 * smallBlockSize, 13 * smallBlockSize, 3 * smallBlockSize, 2.5 * smallBlockSize, color(70, 100, 190)));
     Blocks.push(new Block(34 * smallBlockSize, 21 * smallBlockSize, 4 * smallBlockSize, 5 * smallBlockSize, color(160, 55, 45)));
     Blocks.push(new Block(35 * smallBlockSize, 20 * smallBlockSize, 2.5 * smallBlockSize, smallBlockSize, color(200, 200, 200)));
     Blocks.push(new Block(35 * smallBlockSize, 23 * smallBlockSize, 2.3 * smallBlockSize, 2 * smallBlockSize, color(200, 200, 200)));
     Blocks.push(new Block(41 * smallBlockSize, 22 * smallBlockSize, 5 * smallBlockSize, 3 * smallBlockSize, color(230, 205, 40)));
+  }else if (urbanizationStage === 3) { // Add more urban elements to simulate the fourth stage of urbanization.
+    Blocks.push(new Block(0, 39 * smallBlockSize, 48 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(0, 46 * smallBlockSize, 48 * smallBlockSize, smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(46 * smallBlockSize, 0, smallBlockSize, 48 * smallBlockSize, color(230, 205, 40), true));
+    Blocks.push(new Block(8 * smallBlockSize, 26 * smallBlockSize, 2 * smallBlockSize, 4 * smallBlockSize, color(230, 205, 40)));
+    Blocks.push(new Block(8.5 * smallBlockSize, 28 * smallBlockSize, smallBlockSize, 1.8 * smallBlockSize, color(200, 200, 200)));
+    Blocks.push(new Block(8 * smallBlockSize, 32.5 * smallBlockSize, 2 * smallBlockSize, 1.5 * smallBlockSize, color(200, 200, 200)));
+    Blocks.push(new Block(41 * smallBlockSize, 13 * smallBlockSize, 3 * smallBlockSize, 2.5 * smallBlockSize, color(70, 100, 190)));
+    Blocks.push(new Block(43 * smallBlockSize, 42 * smallBlockSize, 3 * smallBlockSize, 2 * smallBlockSize, color(70, 100, 190)));
+    Blocks.push(new Block(46 * smallBlockSize, 25 * smallBlockSize, smallBlockSize, 2 * smallBlockSize, color(200, 200, 200)));
+    Blocks.push(new Block(46 * smallBlockSize, 33 * smallBlockSize, smallBlockSize, 1.5 * smallBlockSize, color(200, 200, 200)));
   }
   urbanizationStage++;
   generateRandomSmallBlocks(); // Generate cars for newly added roads
