@@ -1,22 +1,27 @@
 # cmen0322_9103_tut3
 
 
-# Part 1
-I intend to add the lighting effects from *Cyberpunk 2077* to my project. You can see the two screenshots below, especially the neon lighting effects on the building and the car tail. I want to enhance the sci-fi atmosphere of the project scene by contrasting the neon lights with the shadows. To be specific, dynamically adjusting the color and lighting effects to simulate the feeling of neon lights lighting up the surroundings will help improve the immersive feeling.
-
-![Cyberpunk 2077 Image 1](readmeimages/Cyberpunk-71.png)
-
-![Cyberpunk 2077 Image 2](readmeimages/scene-015.jpg)
+# Instructions on how to interact with the work
+The animation will start immediately after opening and new city elements will be added every 2.5 seconds to simulate the urbanization process. In total, the code will add new city elements four times, simulating the completed urbanization process after 10 seconds. The timed animation can be restarted by refreshing the page or resizing the window. At the same time, the size of the output animation will be automatically adjusted according to the window size.
 
 
-# Part 2
-In order to achieve the abovementioned lighting effect, I researched **WebGL** (Web Graphics Library). WebGL is a JavaScript API that can render 2D and 3D graphics in browser. I mainly wanted to use its shaders to control lighting effect and color to achieve the color effectsin *Cyberpunk 2077*. To be specific, using the Vertex Shader in WebGL to control the position of the vertices and generate different shapes to create neon lights. The Fragment Shader is used to control the color and brightness of the neon lights, and functions are used to achieve the halo effect. 
+# Details of individual approach to animating the group code
+- I use timer to drive personal code (time)
 
-Here is a link to an example image and the example code.
+- The various blocks in the image will be animated to simulate the urbanization process. At the beginning of the animation, only some of the blocks representing roads, buildings and vehicles will be shown. After that, every 2.5 seconds, more new blocks components will appear, representing more and more roads and buildings as the urbanization progresses. At the same time, small blocks representing cars will also appear on the new road blocks. Their color, position, speed and direction of movement being completely random, adding randomness to the whole work.
 
-![exmaple image](readmeimages/172816.png)
+- Inspiration for the animation of the personal code: 
+as shown the image below, this is an aerial view of the city, where the distribution of the city buildings, and the yellow roads filled with lights are very similar to our group work. I hope to simulate the process of urbanization by constantly adding new blocks (urban elements) to the animation. In this process, we can find that urbanization will allow the social infrastructure to be improved and people's lives to be more convenient. But at the same time, just like in the animation, as new urban elements are added, there are more and more vehicles on the road, which symbolizes the potential problems of urbanization, such as traffic congestion and the occupation of a large number of natural ecological areas with increased environmental pollution.
 
-[Link Text](https://webgl-shaders.com/rgb-example.html)
+![Inspiration Image](readmeimages/aerial_view_of_a_grid_like_city.png)
 
-[Link Text](https://developer.mozilla.org/en-US/docs/Web/API/WebGLShader)
+
+
+- Technical explanation：
+First, city elements are represented using the Block class, where each block is marked with its position, size, color and whether it is a road block. Define these initial road and building blocks in initializeBlocks() and add new city elements to simulate urbanization in the following addNewCityElement().
+Regarding how to make this a timed animation, I use setInterval(() => {...} , interval); to set a timer that calls addNewCityElement() every 2.5 seconds to add more road and building blocks to the scene, simulating the urbanization. Setting the variable urbanizationStage is to keep track of the stage of urbanization and ensure that the growth stops when the maximum stage is reached, avoiding the accumulation of blocks.
+In addition, the Car class is created to create car objects that simulate their movement on the road blocks, the cars move horizontally or vertically according to the direction of the road and cycle back to the other side when they reach the boundary. draw() function updates the background, draws all the blocks and moves the car every frame. The car's position, color, speed and direction of movement are random, adding randomness to the animation.
+Finally, the windowResized() function makes the canvas redraw when the window is resized and resets the blocks representing the roads, buildings and the small randomized car blocks to avoid accumulation of blocks.
+
+
 
